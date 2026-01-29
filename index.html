@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול קבלות - עוסק פטור</title>
+    <link rel="stylesheet" href="receipt-styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 מערכת ניהול קבלות - עוסק פטור</h1>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('business')">פרטי עסק</button>
+            <button class="tab-btn" onclick="switchTab('receipt')">יצירת קבלה</button>
+        </div>
+
+        <!-- טופס פרטי עסק -->
+        <div id="business-tab" class="tab-content active">
+            <h2>פרטי העסק (שמירה אוטומטית)</h2>
+
+            <div class="logo-section">
+                <label for="logo-upload">לוגו העסק:</label>
+                <input type="file" id="logo-upload" accept="image/*" onchange="handleLogoUpload(event)">
+                <div id="logo-preview">
+                    <img id="preview-img" src="" alt="לוגו" style="display: none;">
+                    <button id="remove-logo" onclick="removeLogo()" style="display: none;">הסר לוגו</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="business-name">שם העסק:</label>
+                <input type="text" id="business-name" placeholder='לדוגמה: "השירותים של דוד"'>
+            </div>
+
+            <div class="form-group">
+                <label for="owner-name">שם הבעלים:</label>
+                <input type="text" id="owner-name" placeholder="דוד כהן">
+            </div>
+
+            <div class="form-group">
+                <label for="business-id">ת.ז. / ח.פ.:</label>
+                <input type="text" id="business-id" placeholder="123456789">
+            </div>
+
+            <div class="form-group">
+                <label for="address">כתובת:</label>
+                <input type="text" id="address" placeholder="רחוב הרצל 1, תל אביב">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">טלפון:</label>
+                <input type="tel" id="phone" placeholder="050-1234567">
+            </div>
+
+            <div class="form-group">
+                <label for="email">אימייל (אופציונלי):</label>
+                <input type="email" id="email" placeholder="info@business.com">
+            </div>
+
+            <button class="btn btn-primary" onclick="saveBusinessDetails()">💾 שמור פרטים</button>
+        </div>
+
+        <!-- טופס יצירת קבלה -->
+        <div id="receipt-tab" class="tab-content">
+            <h2>פרטי הקבלה</h2>
+
+            <div class="form-group">
+                <label for="receipt-number">מספר קבלה:</label>
+                <input type="text" id="receipt-number" placeholder="001">
+            </div>
+
+            <div class="form-group">
+                <label for="receipt-date">תאריך:</label>
+                <input type="date" id="receipt-date">
+            </div>
+
+            <div class="form-group">
+                <label for="customer-name">שם הלקוח:</label>
+                <input type="text" id="customer-name" placeholder="שם הלקוח">
+            </div>
+
+            <div class="form-group">
+                <label for="description">תיאור השירות/מוצר:</label>
+                <textarea id="description" rows="3" placeholder="תיאור מפורט של השירות או המוצר"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">סכום (₪):</label>
+                <input type="number" id="amount" placeholder="100" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label for="payment-method">אמצעי תשלום:</label>
+                <select id="payment-method">
+                    <option value="מזומן">מזומן</option>
+                    <option value="העברה בנקאית">העברה בנקאית</option>
+                    <option value="צ'ק">צ'ק</option>
+                    <option value="אשראי">אשראי</option>
+                    <option value="bit">Bit</option>
+                    <option value="paybox">PayBox</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="generateReceipt()">🧾 צור קבלה</button>
+                <button class="btn btn-secondary" onclick="clearReceiptForm()">🗑️ נקה טופס</button>
+            </div>
+        </div>
+
+        <!-- תצוגת הקבלה -->
+        <div id="receipt-preview" class="receipt-container" style="display: none;">
+            <div class="receipt-actions">
+                <button class="btn btn-primary" onclick="printReceipt()">🖨️ הדפס</button>
+                <button class="btn btn-secondary" onclick="closePreview()">✖️ סגור</button>
+            </div>
+
+            <div id="receipt-content" class="receipt">
+                <!-- הקבלה תיווצר כאן דינמית -->
+            </div>
+        </div>
+    </div>
+
+    <script src="receipt-script.js"></script>
+</body>
+</html>
