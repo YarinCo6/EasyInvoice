@@ -362,6 +362,17 @@ body {
     color: var(--color-text-secondary);
 }
 
+.form-group select {
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.form-group select option {
+    background: var(--color-secondary);
+    color: var(--color-text-primary);
+    padding: 10px;
+}
+
 /* ========================================
    BUTTONS
    ======================================== */

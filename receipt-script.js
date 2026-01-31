@@ -240,8 +240,7 @@ function generateReceipt() {
         </div>
 
         <div class="receipt-footer">
-            <p class="tax-exempt">⚠️ עוסק פטור - חשבונית זו אינה כוללת מע"מ</p>
-            <p>תודה שבחרת בשירותינו!</p>
+            <p class="tax-exempt">⚠️ עוסק פטור</p>
 
             <div class="signature-line">
                 <p>חתימה</p>
@@ -262,45 +261,62 @@ function generateReceipt() {
 
 // Download receipt as PDF
 function downloadPDF() {
-    const receiptContent = document.getElementById('receipt-content');
+    // Get the receipt element (the white inner content, not the wrapper)
+    const receiptElement = document.querySelector('#receipt-content .receipt');
+
+    if (!receiptElement) {
+        showNotification('⚠️ לא נמצאה קבלה להורדה', 'error');
+        return;
+    }
 
     // Get receipt number for filename
     const receiptNumber = document.getElementById('receipt-number').value || '0001';
     const customerName = document.getElementById('customer-name').value || 'customer';
-    const filename = `receipt-${receiptNumber}-${customerName}.pdf`;
+    const sanitizedCustomerName = customerName.replace(/[^a-zA-Z0-9\u0590-\u05FF]/g, '_');
+    const filename = `receipt-${receiptNumber}-${sanitizedCustomerName}.pdf`;
 
     // Show loading notification
     showNotification('⏳ מכין את ה-PDF...', 'info');
 
     // PDF options
     const opt = {
-        margin: 10,
+        margin: [10, 10, 10, 10],
         filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
+        image: {
+            type: 'jpeg',
+            quality: 0.98
+        },
         html2canvas: {
             scale: 2,
             useCORS: true,
-            letterRendering: true
+            letterRendering: true,
+            backgroundColor: '#ffffff',
+            logging: false,
+            scrollY: 0,
+            scrollX: 0
         },
         jsPDF: {
             unit: 'mm',
             format: 'a4',
             orientation: 'portrait',
             compress: true
+        },
+        pagebreak: {
+            mode: ['avoid-all', 'css', 'legacy']
         }
     };
 
     // Generate PDF
     html2pdf()
         .set(opt)
-        .from(receiptContent)
+        .from(receiptElement)
         .save()
         .then(() => {
             showNotification('✅ ה-PDF הורד בהצלחה!', 'success');
         })
         .catch((error) => {
             console.error('PDF Error:', error);
-            showNotification('⚠️ שגיאה ביצירת PDF', 'error');
+            showNotification('⚠️ שגיאה ביצירת PDF. נסה שוב.', 'error');
         });
 }
 
