@@ -3,125 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת ניהול קבלות - עוסק פטור</title>
+    <title>EasyInvoice - מערכת קבלות חכמה</title>
     <link rel="stylesheet" href="receipt-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📝 מערכת ניהול קבלות - עוסק פטור</h1>
-        </header>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('business')">פרטי עסק</button>
-            <button class="tab-btn" onclick="switchTab('receipt')">יצירת קבלה</button>
-        </div>
-
-        <!-- טופס פרטי עסק -->
-        <div id="business-tab" class="tab-content active">
-            <h2>פרטי העסק (שמירה אוטומטית)</h2>
-
-            <div class="logo-section">
-                <label for="logo-upload">לוגו העסק:</label>
-                <input type="file" id="logo-upload" accept="image/*" onchange="handleLogoUpload(event)">
-                <div id="logo-preview">
-                    <img id="preview-img" src="" alt="לוגו" style="display: none;">
-                    <button id="remove-logo" onclick="removeLogo()" style="display: none;">הסר לוגו</button>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="logo">
+                    <h1>EasyInvoice</h1>
+                    <span class="logo-subtitle">מערכת קבלות מתקדמת</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#business" class="nav-link active" onclick="scrollToSection('business')">פרטי עסק</a>
+                    <a href="#receipt" class="nav-link" onclick="scrollToSection('receipt')">יצירת קבלה</a>
                 </div>
             </div>
+        </nav>
 
-            <div class="form-group">
-                <label for="business-name">שם העסק:</label>
-                <input type="text" id="business-name" placeholder='לדוגמה: "השירותים של דוד"'>
-            </div>
-
-            <div class="form-group">
-                <label for="owner-name">שם הבעלים:</label>
-                <input type="text" id="owner-name" placeholder="דוד כהן">
-            </div>
-
-            <div class="form-group">
-                <label for="business-id">ת.ז. / ח.פ.:</label>
-                <input type="text" id="business-id" placeholder="123456789">
-            </div>
-
-            <div class="form-group">
-                <label for="address">כתובת:</label>
-                <input type="text" id="address" placeholder="רחוב הרצל 1, תל אביב">
-            </div>
-
-            <div class="form-group">
-                <label for="phone">טלפון:</label>
-                <input type="tel" id="phone" placeholder="050-1234567">
-            </div>
-
-            <div class="form-group">
-                <label for="email">אימייל (אופציונלי):</label>
-                <input type="email" id="email" placeholder="info@business.com">
-            </div>
-
-            <button class="btn btn-primary" onclick="saveBusinessDetails()">💾 שמור פרטים</button>
+        <div class="hero-content">
+            <h2 class="hero-title">צור קבלות מקצועיות<br>בכמה קליקים</h2>
+            <p class="hero-subtitle">מערכת חכמה לניהול קבלות לעוסק פטור - מהירה, פשוטה ומקצועית</p>
+            <button class="cta-button" onclick="scrollToSection('receipt')">
+                התחל עכשיו
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
         </div>
+    </div>
 
-        <!-- טופס יצירת קבלה -->
-        <div id="receipt-tab" class="tab-content">
-            <h2>פרטי הקבלה</h2>
-
-            <div class="form-group">
-                <label for="receipt-number">מספר קבלה:</label>
-                <input type="text" id="receipt-number" placeholder="001">
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Business Details Section -->
+        <section id="business" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">פרטי העסק שלך</h2>
+                <p class="section-subtitle">הגדר את פרטי העסק פעם אחת - המערכת תשמור אותם אוטומטית</p>
             </div>
 
-            <div class="form-group">
-                <label for="receipt-date">תאריך:</label>
-                <input type="date" id="receipt-date">
+            <div class="card">
+                <div class="logo-upload-zone">
+                    <input type="file" id="logo-upload" accept="image/*" onchange="handleLogoUpload(event)" style="display: none;">
+                    <div id="logo-preview-zone" onclick="document.getElementById('logo-upload').click()">
+                        <img id="preview-img" src="" alt="לוגו" style="display: none;">
+                        <div id="upload-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+                                <polyline points="21 15 16 10 5 21" stroke-width="2"/>
+                            </svg>
+                            <p>העלה לוגו של העסק</p>
+                            <span>PNG, JPG עד 5MB</span>
+                        </div>
+                    </div>
+                    <button id="remove-logo" onclick="removeLogo()" style="display: none;">הסר לוגו</button>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="business-name">שם העסק</label>
+                        <input type="text" id="business-name" placeholder='לדוגמה: "השירותים של דוד"'>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="owner-name">שם הבעלים</label>
+                        <input type="text" id="owner-name" placeholder="דוד כהן">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business-id">ת.ז. / ח.פ.</label>
+                        <input type="text" id="business-id" placeholder="123456789">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">טלפון</label>
+                        <input type="tel" id="phone" placeholder="050-1234567">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address">כתובת</label>
+                        <input type="text" id="address" placeholder="רחוב הרצל 1, תל אביב">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="email">אימייל (אופציונלי)</label>
+                        <input type="email" id="email" placeholder="info@business.com">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveBusinessDetails()">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                        <path d="M15.833 17.5H4.167c-.92 0-1.667-.746-1.667-1.667V4.167c0-.92.746-1.667 1.667-1.667h8.75L17.5 7.083v8.75c0 .92-.746 1.667-1.667 1.667z" stroke-width="2"/>
+                        <path d="M14.167 17.5v-6.667H5.833V17.5M5.833 2.5v5h7.5" stroke-width="2"/>
+                    </svg>
+                    שמור פרטים
+                </button>
+            </div>
+        </section>
+
+        <!-- Receipt Creation Section -->
+        <section id="receipt" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">צור קבלה חדשה</h2>
+                <p class="section-subtitle">מלא את פרטי העסקה והקבלה תיווצר אוטומטית</p>
             </div>
 
-            <div class="form-group">
-                <label for="customer-name">שם הלקוח:</label>
-                <input type="text" id="customer-name" placeholder="שם הלקוח">
-            </div>
+            <div class="card">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="receipt-number">מספר קבלה</label>
+                        <input type="text" id="receipt-number" placeholder="001">
+                    </div>
 
-            <div class="form-group">
-                <label for="description">תיאור השירות/מוצר:</label>
-                <textarea id="description" rows="3" placeholder="תיאור מפורט של השירות או המוצר"></textarea>
-            </div>
+                    <div class="form-group">
+                        <label for="receipt-date">תאריך</label>
+                        <input type="date" id="receipt-date">
+                    </div>
 
-            <div class="form-group">
-                <label for="amount">סכום (₪):</label>
-                <input type="number" id="amount" placeholder="100" step="0.01">
-            </div>
+                    <div class="form-group full-width">
+                        <label for="customer-name">שם הלקוח</label>
+                        <input type="text" id="customer-name" placeholder="שם הלקוח">
+                    </div>
 
-            <div class="form-group">
-                <label for="payment-method">אמצעי תשלום:</label>
-                <select id="payment-method">
-                    <option value="מזומן">מזומן</option>
-                    <option value="העברה בנקאית">העברה בנקאית</option>
-                    <option value="צ'ק">צ'ק</option>
-                    <option value="אשראי">אשראי</option>
-                    <option value="bit">Bit</option>
-                    <option value="paybox">PayBox</option>
-                </select>
-            </div>
+                    <div class="form-group full-width">
+                        <label for="description">תיאור השירות/מוצר</label>
+                        <textarea id="description" rows="4" placeholder="תיאור מפורט של השירות או המוצר שניתן"></textarea>
+                    </div>
 
-            <div class="button-group">
-                <button class="btn btn-primary" onclick="generateReceipt()">🧾 צור קבלה</button>
-                <button class="btn btn-secondary" onclick="clearReceiptForm()">🗑️ נקה טופס</button>
-            </div>
-        </div>
+                    <div class="form-group">
+                        <label for="amount">סכום (₪)</label>
+                        <input type="number" id="amount" placeholder="0.00" step="0.01">
+                    </div>
 
-        <!-- תצוגת הקבלה -->
-        <div id="receipt-preview" class="receipt-container" style="display: none;">
-            <div class="receipt-actions">
-                <button class="btn btn-primary" onclick="printReceipt()">🖨️ הדפס</button>
-                <button class="btn btn-secondary" onclick="closePreview()">✖️ סגור</button>
-            </div>
+                    <div class="form-group">
+                        <label for="payment-method">אמצעי תשלום</label>
+                        <select id="payment-method">
+                            <option value="מזומן">מזומן</option>
+                            <option value="העברה בנקאית">העברה בנקאית</option>
+                            <option value="צ'ק">צ'ק</option>
+                            <option value="אשראי">אשראי</option>
+                            <option value="bit">Bit</option>
+                            <option value="paybox">PayBox</option>
+                        </select>
+                    </div>
+                </div>
 
-            <div id="receipt-content" class="receipt">
-                <!-- הקבלה תיווצר כאן דינמית -->
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="generateReceipt()">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                            <path d="M5.833 2.5h8.334c.916 0 1.666.75 1.666 1.667v15l-5.833-2.5-5.833 2.5v-15c0-.917.75-1.667 1.666-1.667z" stroke-width="2"/>
+                        </svg>
+                        צור קבלה
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearReceiptForm()">
+                        נקה טופס
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Receipt Preview Section -->
+        <div id="receipt-preview" class="receipt-modal" style="display: none;">
+            <div class="modal-overlay" onclick="closePreview()"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>תצוגה מקדימה</h3>
+                    <div class="modal-actions">
+                        <button class="btn btn-icon" onclick="printReceipt()" title="הדפס">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                <path d="M5 7V2.5h10V7M5 15H3.333c-.916 0-1.666-.75-1.666-1.667V9.167c0-.917.75-1.667 1.666-1.667h13.334c.916 0 1.666.75 1.666 1.667v4.166c0 .917-.75 1.667-1.666 1.667H15" stroke-width="2"/>
+                                <path d="M5 13.333h10V17.5H5v-4.167z" stroke-width="2"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-icon" onclick="closePreview()" title="סגור">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                <path d="M15 5L5 15M5 5l10 10" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="receipt-content" class="receipt">
+                    <!-- הקבלה תיווצר כאן דינמית -->
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2024 EasyInvoice. כל הזכויות שמורות.</p>
+            <p class="footer-subtitle">מערכת ליצירת קבלות לעוסק פטור</p>
+        </div>
+    </footer>
 
     <script src="receipt-script.js"></script>
 </body>

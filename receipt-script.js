@@ -3,28 +3,57 @@ document.addEventListener('DOMContentLoaded', function() {
     loadBusinessDetails();
     setTodayDate();
     generateReceiptNumber();
+    initSmoothScroll();
 });
 
-// Tab switching
-function switchTab(tab) {
-    // Hide all tabs
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+// Smooth scroll to section
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // Show selected tab
-    document.getElementById(tab + '-tab').classList.add('active');
-    event.target.classList.add('active');
+        // Update active nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + sectionId) {
+                link.classList.add('active');
+            }
+        });
+    }
 }
 
-// Logo handling
+// Initialize smooth scroll for nav links
+function initSmoothScroll() {
+    // Prevent default anchor behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+        });
+    });
+}
+
+// Logo handling with improved UX
 function handleLogoUpload(event) {
     const file = event.target.files[0];
     if (file) {
+        // Validate file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            showNotification('⚠️ הקובץ גדול מדי. גודל מקסימלי: 5MB', 'error');
+            return;
+        }
+
+        // Validate file type
+        if (!file.type.match('image.*')) {
+            showNotification('⚠️ יש להעלות קובץ תמונה בלבד', 'error');
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = function(e) {
             const logoData = e.target.result;
             localStorage.setItem('businessLogo', logoData);
             displayLogo(logoData);
+            showNotification('✅ הלוגו הועלה בהצלחה!');
         };
         reader.readAsDataURL(file);
     }
@@ -33,6 +62,11 @@ function handleLogoUpload(event) {
 function displayLogo(logoData) {
     const previewImg = document.getElementById('preview-img');
     const removeBtn = document.getElementById('remove-logo');
+    const placeholder = document.getElementById('upload-placeholder');
+
+    if (placeholder) {
+        placeholder.style.display = 'none';
+    }
 
     previewImg.src = logoData;
     previewImg.style.display = 'block';
@@ -41,9 +75,19 @@ function displayLogo(logoData) {
 
 function removeLogo() {
     localStorage.removeItem('businessLogo');
-    document.getElementById('preview-img').style.display = 'none';
-    document.getElementById('remove-logo').style.display = 'none';
+    const previewImg = document.getElementById('preview-img');
+    const removeBtn = document.getElementById('remove-logo');
+    const placeholder = document.getElementById('upload-placeholder');
+
+    previewImg.style.display = 'none';
+    removeBtn.style.display = 'none';
+
+    if (placeholder) {
+        placeholder.style.display = 'flex';
+    }
+
     document.getElementById('logo-upload').value = '';
+    showNotification('🗑️ הלוגו הוסר');
 }
 
 // Save business details to localStorage
@@ -57,9 +101,13 @@ function saveBusinessDetails() {
         email: document.getElementById('email').value
     };
 
-    localStorage.setItem('businessDetails', JSON.stringify(businessData));
+    // Validate required fields
+    if (!businessData.name || !businessData.id || !businessData.phone) {
+        showNotification('⚠️ אנא מלא לפחות: שם עסק, ת.ז./ח.פ. וטלפון', 'error');
+        return;
+    }
 
-    // Show success message
+    localStorage.setItem('businessDetails', JSON.stringify(businessData));
     showNotification('✅ פרטי העסק נשמרו בהצלחה!');
 }
 
@@ -111,10 +159,17 @@ function generateReceipt() {
         return;
     }
 
+    // Validate amount
+    if (parseFloat(amount) <= 0) {
+        showNotification('⚠️ הסכום חייב להיות גדול מ-0', 'error');
+        return;
+    }
+
     // Get business details
     const saved = localStorage.getItem('businessDetails');
     if (!saved) {
-        showNotification('⚠️ אנא שמור תחילה את פרטי העסק בלשונית "פרטי עסק"', 'error');
+        showNotification('⚠️ אנא שמור תחילה את פרטי העסק', 'error');
+        scrollToSection('business');
         return;
     }
 
@@ -196,13 +251,13 @@ function generateReceipt() {
 
     // Display receipt
     document.getElementById('receipt-content').innerHTML = receiptHTML;
-    document.getElementById('receipt-preview').style.display = 'block';
+    document.getElementById('receipt-preview').style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
 
     // Save receipt number
     localStorage.setItem('lastReceiptNumber', receiptNumber);
 
-    // Scroll to receipt
-    document.getElementById('receipt-preview').scrollIntoView({ behavior: 'smooth' });
+    showNotification('✅ הקבלה נוצרה בהצלחה!');
 }
 
 // Print receipt
@@ -213,6 +268,7 @@ function printReceipt() {
 // Close preview
 function closePreview() {
     document.getElementById('receipt-preview').style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore scroll
     generateReceiptNumber(); // Generate new number for next receipt
 }
 
@@ -228,40 +284,56 @@ function clearReceiptForm() {
     showNotification('🗑️ הטופס נוקה בהצלחה');
 }
 
-// Show notification
+// Show notification with modern style
 function showNotification(message, type = 'success') {
+    // Remove existing notifications
+    const existingNotif = document.querySelector('.notification');
+    if (existingNotif) {
+        existingNotif.remove();
+    }
+
     // Create notification element
     const notification = document.createElement('div');
+    notification.className = 'notification';
     notification.style.cssText = `
         position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        background: ${type === 'error' ? '#e74c3c' : '#27ae60'};
-        color: white;
-        border-radius: 8px;
+        top: 24px;
+        right: 24px;
+        padding: 16px 24px;
+        background: ${type === 'error' ? '#ff4444' : '#00ff88'};
+        color: ${type === 'error' ? '#ffffff' : '#000000'};
+        border-radius: 12px;
         font-weight: 600;
+        font-size: 14px;
         z-index: 10000;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        animation: slideIn 0.3s ease-out;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        animation: slideInNotif 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        max-width: 400px;
     `;
     notification.textContent = message;
 
     // Add animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(400px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
+    if (!document.getElementById('notif-animation')) {
+        const style = document.createElement('style');
+        style.id = 'notif-animation';
+        style.textContent = `
+            @keyframes slideInNotif {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutNotif {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 
     document.body.appendChild(notification);
 
     // Remove after 3 seconds
     setTimeout(() => {
-        notification.style.animation = 'slideIn 0.3s ease-out reverse';
+        notification.style.animation = 'slideOutNotif 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
@@ -271,5 +343,25 @@ function showNotification(message, type = 'success') {
     const element = document.getElementById(id);
     if (element) {
         element.addEventListener('change', saveBusinessDetails);
+    }
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + P to print when receipt is open
+    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        const receiptPreview = document.getElementById('receipt-preview');
+        if (receiptPreview && receiptPreview.style.display === 'flex') {
+            e.preventDefault();
+            printReceipt();
+        }
+    }
+
+    // ESC to close receipt preview
+    if (e.key === 'Escape') {
+        const receiptPreview = document.getElementById('receipt-preview');
+        if (receiptPreview && receiptPreview.style.display === 'flex') {
+            closePreview();
+        }
     }
 });
