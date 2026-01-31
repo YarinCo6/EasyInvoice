@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <!-- Hero Section -->
@@ -174,6 +175,13 @@
                 <div class="modal-header">
                     <h3>תצוגה מקדימה</h3>
                     <div class="modal-actions">
+                        <button class="btn btn-icon" onclick="downloadPDF()" title="הורד PDF">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                <path d="M17.5 12.5v3.333c0 .917-.75 1.667-1.667 1.667H4.167c-.917 0-1.667-.75-1.667-1.667V12.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polyline points="6.667 8.333 10 11.667 13.333 8.333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="10" y1="11.667" x2="10" y2="2.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
                         <button class="btn btn-icon" onclick="printReceipt()" title="הדפס">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                                 <path d="M5 7V2.5h10V7M5 15H3.333c-.916 0-1.666-.75-1.666-1.667V9.167c0-.917.75-1.667 1.666-1.667h13.334c.916 0 1.666.75 1.666 1.667v4.166c0 .917-.75 1.667-1.666 1.667H15" stroke-width="2"/>

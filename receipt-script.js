@@ -260,6 +260,50 @@ function generateReceipt() {
     showNotification('✅ הקבלה נוצרה בהצלחה!');
 }
 
+// Download receipt as PDF
+function downloadPDF() {
+    const receiptContent = document.getElementById('receipt-content');
+
+    // Get receipt number for filename
+    const receiptNumber = document.getElementById('receipt-number').value || '0001';
+    const customerName = document.getElementById('customer-name').value || 'customer';
+    const filename = `receipt-${receiptNumber}-${customerName}.pdf`;
+
+    // Show loading notification
+    showNotification('⏳ מכין את ה-PDF...', 'info');
+
+    // PDF options
+    const opt = {
+        margin: 10,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            letterRendering: true
+        },
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait',
+            compress: true
+        }
+    };
+
+    // Generate PDF
+    html2pdf()
+        .set(opt)
+        .from(receiptContent)
+        .save()
+        .then(() => {
+            showNotification('✅ ה-PDF הורד בהצלחה!', 'success');
+        })
+        .catch((error) => {
+            console.error('PDF Error:', error);
+            showNotification('⚠️ שגיאה ביצירת PDF', 'error');
+        });
+}
+
 // Print receipt
 function printReceipt() {
     window.print();
@@ -292,6 +336,19 @@ function showNotification(message, type = 'success') {
         existingNotif.remove();
     }
 
+    // Determine colors based on type
+    let bgColor, textColor;
+    if (type === 'error') {
+        bgColor = '#ff4444';
+        textColor = '#ffffff';
+    } else if (type === 'info') {
+        bgColor = '#ffffff';
+        textColor = '#000000';
+    } else {
+        bgColor = '#00ff88';
+        textColor = '#000000';
+    }
+
     // Create notification element
     const notification = document.createElement('div');
     notification.className = 'notification';
@@ -300,8 +357,8 @@ function showNotification(message, type = 'success') {
         top: 24px;
         right: 24px;
         padding: 16px 24px;
-        background: ${type === 'error' ? '#ff4444' : '#00ff88'};
-        color: ${type === 'error' ? '#ffffff' : '#000000'};
+        background: ${bgColor};
+        color: ${textColor};
         border-radius: 12px;
         font-weight: 600;
         font-size: 14px;
