@@ -1,0 +1,26 @@
+# Media files
+*.mp4
+*.mp3
+*.avi
+*.mov
+*.wmv
+*.flv
+*.mkv
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude settings (local only)
+.claude/settings.local.json
+
+# Temporary files
+*.tmp
+*.bak
+*~

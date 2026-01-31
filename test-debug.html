@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyInvoice - Debug Test</title>
+    <link rel="stylesheet" href="receipt-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        #debug-console {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border-top: 2px solid #00ff88;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 10001;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #00ff88;
+        }
+        .debug-item {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .debug-error { color: #ff4444; }
+        .debug-success { color: #00ff88; }
+        .debug-info { color: #ffffff; }
+        #debug-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #00ff88;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            z-index: 10002;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="logo">
+                    <h1>EasyInvoice</h1>
+                    <span class="logo-subtitle">מערכת קבלות מתקדמת - DEBUG MODE</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#business" class="nav-link active" onclick="scrollToSection('business')">פרטי עסק</a>
+                    <a href="#receipt" class="nav-link" onclick="scrollToSection('receipt')">יצירת קבלה</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="hero-content">
+            <h2 class="hero-title">מצב בדיקה<br>Debug Mode</h2>
+            <p class="hero-subtitle">בדיקת כל הפונקציות והאלמנטים של המערכת</p>
+            <button class="cta-button" onclick="runAllTests()">
+                הרץ בדיקות
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Business Details Section -->
+        <section id="business" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">פרטי העסק שלך</h2>
+                <p class="section-subtitle">הגדר את פרטי העסק פעם אחת - המערכת תשמור אותם אוטומטית</p>
+            </div>
+
+            <div class="card">
+                <div class="logo-upload-zone">
+                    <input type="file" id="logo-upload" accept="image/*" onchange="handleLogoUpload(event)" style="display: none;">
+                    <div id="logo-preview-zone" onclick="document.getElementById('logo-upload').click()">
+                        <img id="preview-img" src="" alt="לוגו" style="display: none;">
+                        <div id="upload-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+                                <polyline points="21 15 16 10 5 21" stroke-width="2"/>
+                            </svg>
+                            <p>העלה לוגו של העסק</p>
+                            <span>PNG, JPG עד 5MB</span>
+                        </div>
+                    </div>
+                    <button id="remove-logo" onclick="removeLogo()" style="display: none;">הסר לוגו</button>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="business-name">שם העסק</label>
+                        <input type="text" id="business-name" placeholder='לדוגמה: "השירותים של דוד"'>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="owner-name">שם הבעלים</label>
+                        <input type="text" id="owner-name" placeholder="דוד כהן">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business-id">ת.ז. / ח.פ.</label>
+                        <input type="text" id="business-id" placeholder="123456789">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">טלפון</label>
+                        <input type="tel" id="phone" placeholder="050-1234567">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address">כתובת</label>
+                        <input type="text" id="address" placeholder="רחוב הרצל 1, תל אביב">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="email">אימייל (אופציונלי)</label>
+                        <input type="email" id="email" placeholder="info@business.com">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveBusinessDetails()">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                        <path d="M15.833 17.5H4.167c-.92 0-1.667-.746-1.667-1.667V4.167c0-.92.746-1.667 1.667-1.667h8.75L17.5 7.083v8.75c0 .92-.746 1.667-1.667 1.667z" stroke-width="2"/>
+                        <path d="M14.167 17.5v-6.667H5.833V17.5M5.833 2.5v5h7.5" stroke-width="2"/>
+                    </svg>
+                    שמור פרטים
+                </button>
+            </div>
+        </section>
+
+        <!-- Receipt Creation Section -->
+        <section id="receipt" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">צור קבלה חדשה</h2>
+                <p class="section-subtitle">מלא את פרטי העסקה והקבלה תיווצר אוטומטית</p>
+            </div>
+
+            <div class="card">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="receipt-number">מספר קבלה</label>
+                        <input type="text" id="receipt-number" placeholder="001">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="receipt-date">תאריך</label>
+                        <input type="date" id="receipt-date">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="customer-name">שם הלקוח</label>
+                        <input type="text" id="customer-name" placeholder="שם הלקוח">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="description">תיאור השירות/מוצר</label>
+                        <textarea id="description" rows="4" placeholder="תיאור מפורט של השירות או המוצר שניתן"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">סכום (₪)</label>
+                        <input type="number" id="amount" placeholder="0.00" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-method">אמצעי תשלום</label>
+                        <select id="payment-method">
+                            <option value="מזומן">מזומן</option>
+                            <option value="העברה בנקאית">העברה בנקאית</option>
+                            <option value="צ'ק">צ'ק</option>
+                            <option value="אשראי">אשראי</option>
+                            <option value="bit">Bit</option>
+                            <option value="paybox">PayBox</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="generateReceipt()">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                            <path d="M5.833 2.5h8.334c.916 0 1.666.75 1.666 1.667v15l-5.833-2.5-5.833 2.5v-15c0-.917.75-1.667 1.666-1.667z" stroke-width="2"/>
+                        </svg>
+                        צור קבלה
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearReceiptForm()">
+                        נקה טופס
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Receipt Preview Section -->
+        <div id="receipt-preview" class="receipt-modal" style="display: none;">
+            <div class="modal-overlay" onclick="closePreview()"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>תצוגה מקדימה</h3>
+                    <div class="modal-actions">
+                        <button class="btn btn-icon" onclick="printReceipt()" title="הדפס">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                <path d="M5 7V2.5h10V7M5 15H3.333c-.916 0-1.666-.75-1.666-1.667V9.167c0-.917.75-1.667 1.666-1.667h13.334c.916 0 1.666.75 1.666 1.667v4.166c0 .917-.75 1.667-1.666 1.667H15" stroke-width="2"/>
+                                <path d="M5 13.333h10V17.5H5v-4.167z" stroke-width="2"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-icon" onclick="closePreview()" title="סגור">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                <path d="M15 5L5 15M5 5l10 10" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="receipt-content" class="receipt">
+                    <!-- הקבלה תיווצר כאן דינמית -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2024 EasyInvoice. כל הזכויות שמורות.</p>
+            <p class="footer-subtitle">מערכת ליצירת קבלות לעוסק פטור - DEBUG MODE</p>
+        </div>
+    </footer>
+
+    <!-- Debug Console -->
+    <button id="debug-toggle" onclick="toggleDebugConsole()">🐛 Toggle Debug</button>
+    <div id="debug-console" style="display: none;">
+        <h3 style="color: #00ff88; margin-bottom: 10px;">Debug Console</h3>
+        <div id="debug-output"></div>
+    </div>
+
+    <script src="receipt-script.js"></script>
+    <script>
+        // Debug Functions
+        let debugVisible = false;
+
+        function toggleDebugConsole() {
+            debugVisible = !debugVisible;
+            document.getElementById('debug-console').style.display = debugVisible ? 'block' : 'none';
+        }
+
+        function debugLog(message, type = 'info') {
+            const output = document.getElementById('debug-output');
+            const item = document.createElement('div');
+            item.className = `debug-item debug-${type}`;
+            item.textContent = `[${new Date().toLocaleTimeString('he-IL')}] ${message}`;
+            output.appendChild(item);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Override console methods
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        console.log = function(...args) {
+            debugLog(args.join(' '), 'info');
+            originalLog.apply(console, args);
+        };
+
+        console.error = function(...args) {
+            debugLog('ERROR: ' + args.join(' '), 'error');
+            originalError.apply(console, args);
+        };
+
+        console.warn = function(...args) {
+            debugLog('WARNING: ' + args.join(' '), 'info');
+            originalWarn.apply(console, args);
+        };
+
+        // Run all tests
+        function runAllTests() {
+            toggleDebugConsole();
+            debugLog('🚀 Starting debug tests...', 'success');
+
+            setTimeout(() => {
+                // Test 1: Check DOM elements
+                debugLog('Test 1: Checking DOM elements...', 'info');
+                const elements = [
+                    'business-name', 'owner-name', 'business-id',
+                    'address', 'phone', 'email',
+                    'receipt-number', 'receipt-date', 'customer-name',
+                    'description', 'amount', 'payment-method'
+                ];
+
+                let allFound = true;
+                elements.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        debugLog(`✓ Found element: ${id}`, 'success');
+                    } else {
+                        debugLog(`✗ Missing element: ${id}`, 'error');
+                        allFound = false;
+                    }
+                });
+
+                if (allFound) {
+                    debugLog('✅ All DOM elements found!', 'success');
+                }
+
+                // Test 2: Check localStorage
+                setTimeout(() => {
+                    debugLog('Test 2: Checking localStorage...', 'info');
+                    try {
+                        localStorage.setItem('test', 'value');
+                        localStorage.removeItem('test');
+                        debugLog('✅ localStorage is working!', 'success');
+                    } catch(e) {
+                        debugLog('✗ localStorage error: ' + e.message, 'error');
+                    }
+
+                    // Test 3: Check functions
+                    setTimeout(() => {
+                        debugLog('Test 3: Checking functions...', 'info');
+                        const functions = [
+                            'scrollToSection', 'handleLogoUpload', 'displayLogo',
+                            'removeLogo', 'saveBusinessDetails', 'loadBusinessDetails',
+                            'setTodayDate', 'generateReceiptNumber', 'generateReceipt',
+                            'printReceipt', 'closePreview', 'clearReceiptForm', 'showNotification'
+                        ];
+
+                        functions.forEach(funcName => {
+                            if (typeof window[funcName] === 'function') {
+                                debugLog(`✓ Function exists: ${funcName}`, 'success');
+                            } else {
+                                debugLog(`✗ Missing function: ${funcName}`, 'error');
+                            }
+                        });
+
+                        debugLog('🎉 Debug tests completed!', 'success');
+                    }, 500);
+                }, 500);
+            }, 500);
+        }
+
+        // Log initialization
+        window.addEventListener('DOMContentLoaded', function() {
+            debugLog('✅ Page loaded successfully!', 'success');
+            debugLog('Click "הרץ בדיקות" to run all tests', 'info');
+        });
+
+        // Catch all errors
+        window.addEventListener('error', function(e) {
+            debugLog('GLOBAL ERROR: ' + e.message + ' at ' + e.filename + ':' + e.lineno, 'error');
+        });
+    </script>
+</body>
+</html>
