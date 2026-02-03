@@ -504,7 +504,7 @@ body {
 }
 
 /* ========================================
-   RECEIPT STYLING
+   RECEIPT STYLING - NEW FORMAT
    ======================================== */
 
 #receipt-content {
@@ -515,126 +515,173 @@ body {
 .receipt {
     background: white;
     color: #000;
-    padding: 40px;
+    padding: 30px;
     border-radius: var(--radius-sm);
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.receipt-header {
+/* Header with logo and business info */
+.receipt-header-new {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    border: 2px solid #000;
+    margin-bottom: 20px;
+}
+
+.header-right {
+    flex: 0 0 120px;
+}
+
+.receipt-logo-new {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border: 2px solid #000;
+    padding: 5px;
+    background: white;
+}
+
+.logo-placeholder {
+    width: 100px;
+    height: 100px;
+    border: 2px solid #000;
+    background: #f0f0f0;
+}
+
+.header-left {
+    flex: 1;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.business-name-new {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: #000;
+}
+
+.business-details-new {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.business-details-new p {
+    margin: 3px 0;
+}
+
+/* Date section */
+.receipt-date-section {
+    background: #d3d3d3;
+    padding: 15px;
     text-align: center;
-    border-bottom: 2px solid #000;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
-.receipt-logo {
-    max-width: 150px;
-    max-height: 100px;
+.date-box {
+    font-size: 16px;
+}
+
+.receipt-number-label {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Customer section */
+.customer-section {
+    margin-bottom: 20px;
+}
+
+.customer-section h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.customer-info-new p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Service description */
+.service-description-new {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-right: 3px solid #000;
+}
+
+.service-description-new p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Table */
+.receipt-table-new {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.receipt-table-new th,
+.receipt-table-new td {
+    border: 1px solid #000;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.receipt-table-new th {
+    background: #e8e8e8;
+    font-weight: 600;
+}
+
+.receipt-table-new td {
+    background: white;
+}
+
+/* Total section */
+.total-section-new {
+    background: #f0f0f0;
+    padding: 15px;
     margin-bottom: 15px;
 }
 
-.receipt-header h2 {
-    font-size: 28px;
-    margin: 10px 0;
-    color: #000;
-}
-
-.receipt-header .business-info {
-    font-size: 14px;
-    color: #333;
-    line-height: 1.8;
-}
-
-.receipt-title {
-    text-align: center;
-    font-size: 32px;
-    font-weight: 700;
-    margin: 20px 0;
-    color: #000;
-}
-
-.receipt-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 30px;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 8px;
-}
-
-.info-item {
+.total-row {
     display: flex;
-}
-
-.info-label {
-    font-weight: 600;
-    margin-left: 10px;
-    color: #000;
-}
-
-.info-value {
-    color: #333;
-}
-
-.receipt-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-.receipt-table th,
-.receipt-table td {
-    padding: 12px;
-    text-align: right;
-    border: 1px solid #ddd;
-}
-
-.receipt-table th {
-    background: #000;
-    color: white;
-    font-weight: 600;
-}
-
-.receipt-table tr:nth-child(even) {
-    background: #f9f9f9;
-}
-
-.receipt-total {
-    margin-top: 30px;
-    padding: 20px;
-    background: #000;
-    color: white;
-    text-align: center;
-    font-size: 24px;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
     font-weight: 700;
-    border-radius: 8px;
 }
 
-.receipt-footer {
-    margin-top: 40px;
+.total-amount {
+    font-size: 22px;
+}
+
+/* Payment method */
+.payment-method-new {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Footer */
+.footer-new {
+    text-align: center;
     padding-top: 20px;
-    border-top: 2px solid #000;
-    text-align: center;
+    border-top: 1px solid #ccc;
+}
+
+.tax-exempt-new {
+    font-size: 14px;
     color: #666;
-}
-
-.receipt-footer p {
-    margin: 10px 0;
-}
-
-.tax-exempt {
-    font-weight: 700;
-    font-size: 16px;
-    color: #e74c3c;
-}
-
-.signature-line {
-    margin-top: 50px;
-    border-top: 2px solid #000;
-    width: 200px;
-    margin-right: auto;
-    padding-top: 10px;
-    text-align: center;
+    font-weight: 600;
 }
 
 /* ========================================

@@ -182,69 +182,73 @@ function generateReceipt() {
     // Format amount
     const formattedAmount = parseFloat(amount).toFixed(2);
 
-    // Create receipt HTML
+    // Create receipt HTML - New format matching the example
     const receiptHTML = `
-        <div class="receipt-header">
-            ${logoData ? `<img src="${logoData}" class="receipt-logo" alt="לוגו העסק">` : ''}
-            <h2>${businessData.name}</h2>
-            <div class="business-info">
-                <p><strong>עוסק פטור</strong></p>
-                <p>ת.ז. / ח.פ.: ${businessData.id}</p>
-                <p>${businessData.address}</p>
-                <p>טלפון: ${businessData.phone}</p>
-                ${businessData.email ? `<p>אימייל: ${businessData.email}</p>` : ''}
+        <div class="receipt-header-new">
+            <div class="header-right">
+                ${logoData ? `<img src="${logoData}" class="receipt-logo-new" alt="לוגו העסק">` : '<div class="logo-placeholder"></div>'}
+            </div>
+            <div class="header-left">
+                <h1 class="business-name-new">${businessData.name}</h1>
+                <div class="business-details-new">
+                    <p>עוסק פטור: ${businessData.id}</p>
+                    <p>טלפון: ${businessData.phone}</p>
+                    <p>דוא"ל: ${businessData.email || 'לא צוין'}</p>
+                </div>
             </div>
         </div>
 
-        <div class="receipt-title">קבלה</div>
-
-        <div class="receipt-info">
-            <div class="info-item">
-                <span class="info-label">מספר קבלה:</span>
-                <span class="info-value">${receiptNumber}</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">תאריך:</span>
-                <span class="info-value">${formattedDate}</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">שם הלקוח:</span>
-                <span class="info-value">${customerName}</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">אמצעי תשלום:</span>
-                <span class="info-value">${paymentMethod}</span>
+        <div class="receipt-date-section">
+            <div class="date-box">
+                <strong>${formattedDate}</strong>
+                <div class="receipt-number-label">קבלה מספר: ${receiptNumber}</div>
             </div>
         </div>
 
-        <div class="receipt-details">
-            <h3>פירוט השירות/מוצר:</h3>
-            <table class="receipt-table">
-                <thead>
-                    <tr>
-                        <th>תיאור</th>
-                        <th>סכום</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>${description}</td>
-                        <td>₪${formattedAmount}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="receipt-total">
-            סה"כ לתשלום: ₪${formattedAmount}
-        </div>
-
-        <div class="receipt-footer">
-            <p class="tax-exempt">⚠️ עוסק פטור</p>
-
-            <div class="signature-line">
-                <p>חתימה</p>
+        <div class="customer-section">
+            <h3>לכבוד:</h3>
+            <div class="customer-info-new">
+                <p><strong>${customerName}</strong></p>
+                <p>טלפון: ${document.getElementById('phone').value || 'לא צוין'}</p>
             </div>
+        </div>
+
+        <div class="service-description-new">
+            <p>${description}</p>
+        </div>
+
+        <table class="receipt-table-new">
+            <thead>
+                <tr>
+                    <th>סכום</th>
+                    <th>טיפול נוספים</th>
+                    <th>מחיר השרות</th>
+                    <th>תיאור:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>₪${formattedAmount}</strong></td>
+                    <td>כבוד 6 חודשים</td>
+                    <td>-</td>
+                    <td>${description.substring(0, 30)}${description.length > 30 ? '...' : ''}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="total-section-new">
+            <div class="total-row">
+                <span class="total-label">סה"כ לתשלום:</span>
+                <span class="total-amount">₪${formattedAmount}</span>
+            </div>
+        </div>
+
+        <div class="payment-method-new">
+            <p><strong>שולם במזומן/העברה</strong></p>
+        </div>
+
+        <div class="footer-new">
+            <p class="tax-exempt-new">⚠️ עוסק פטור</p>
         </div>
     `;
 
@@ -261,7 +265,7 @@ function generateReceipt() {
 
 // Download receipt as PDF
 function downloadPDF() {
-    // Get the receipt element (the white inner content, not the wrapper)
+    // Get the receipt element
     const receiptElement = document.querySelector('#receipt-content .receipt');
 
     if (!receiptElement) {
@@ -278,9 +282,23 @@ function downloadPDF() {
     // Show loading notification
     showNotification('⏳ מכין את ה-PDF...', 'info');
 
+    // Clone the element to avoid modifying the original
+    const clonedElement = receiptElement.cloneNode(true);
+
+    // Create a temporary container
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
+    tempContainer.style.width = '794px'; // A4 width in pixels at 96 DPI
+    tempContainer.style.background = 'white';
+    tempContainer.style.padding = '20px';
+    tempContainer.appendChild(clonedElement);
+    document.body.appendChild(tempContainer);
+
     // PDF options
     const opt = {
-        margin: [10, 10, 10, 10],
+        margin: 10,
         filename: filename,
         image: {
             type: 'jpeg',
@@ -292,29 +310,31 @@ function downloadPDF() {
             letterRendering: true,
             backgroundColor: '#ffffff',
             logging: false,
-            scrollY: 0,
-            scrollX: 0
+            windowWidth: 794,
+            width: 794
         },
         jsPDF: {
             unit: 'mm',
             format: 'a4',
-            orientation: 'portrait',
-            compress: true
-        },
-        pagebreak: {
-            mode: ['avoid-all', 'css', 'legacy']
+            orientation: 'portrait'
         }
     };
 
     // Generate PDF
     html2pdf()
         .set(opt)
-        .from(receiptElement)
+        .from(tempContainer)
         .save()
         .then(() => {
+            // Remove temporary container
+            document.body.removeChild(tempContainer);
             showNotification('✅ ה-PDF הורד בהצלחה!', 'success');
         })
         .catch((error) => {
+            // Remove temporary container on error
+            if (document.body.contains(tempContainer)) {
+                document.body.removeChild(tempContainer);
+            }
             console.error('PDF Error:', error);
             showNotification('⚠️ שגיאה ביצירת PDF. נסה שוב.', 'error');
         });
