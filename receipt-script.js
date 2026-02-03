@@ -182,39 +182,41 @@ function generateReceipt() {
     // Format amount
     const formattedAmount = parseFloat(amount).toFixed(2);
 
-    // Create receipt HTML - New format matching the example
+    // Create receipt HTML - Exact format matching the example
     const receiptHTML = `
         <div class="receipt-header-new">
-            <div class="header-right">
-                ${logoData ? `<img src="${logoData}" class="receipt-logo-new" alt="לוגו העסק">` : '<div class="logo-placeholder"></div>'}
-            </div>
             <div class="header-left">
                 <h1 class="business-name-new">${businessData.name}</h1>
                 <div class="business-details-new">
                     <p>עוסק פטור: ${businessData.id}</p>
                     <p>טלפון: ${businessData.phone}</p>
-                    <p>דוא"ל: ${businessData.email || 'לא צוין'}</p>
+                    <p>דוא"ל: ${businessData.email || ''}</p>
                 </div>
+            </div>
+            <div class="header-right">
+                ${logoData ? `<img src="${logoData}" class="receipt-logo-new" alt="לוגו העסק">` : '<div class="logo-placeholder"></div>'}
             </div>
         </div>
 
         <div class="receipt-date-section">
             <div class="date-box">
-                <strong>${formattedDate}</strong>
+                <div class="date-large">${formattedDate}</div>
                 <div class="receipt-number-label">קבלה מספר: ${receiptNumber}</div>
             </div>
         </div>
 
         <div class="customer-section">
-            <h3>לכבוד:</h3>
+            <div class="customer-label">לכבוד:</div>
             <div class="customer-info-new">
-                <p><strong>${customerName}</strong></p>
-                <p>טלפון: ${document.getElementById('phone').value || 'לא צוין'}</p>
+                <div class="customer-number">1</div>
+                <div class="customer-details">
+                    <p>טלפון: ${businessData.phone}</p>
+                </div>
             </div>
         </div>
 
         <div class="service-description-new">
-            <p>${description}</p>
+            <div class="service-number">1</div>
         </div>
 
         <table class="receipt-table-new">
@@ -228,27 +230,23 @@ function generateReceipt() {
             </thead>
             <tbody>
                 <tr>
-                    <td><strong>₪${formattedAmount}</strong></td>
+                    <td>₪${formattedAmount}</td>
                     <td>כבוד 6 חודשים</td>
                     <td>-</td>
-                    <td>${description.substring(0, 30)}${description.length > 30 ? '...' : ''}</td>
+                    <td>1</td>
                 </tr>
             </tbody>
         </table>
 
         <div class="total-section-new">
             <div class="total-row">
-                <span class="total-label">סה"כ לתשלום:</span>
                 <span class="total-amount">₪${formattedAmount}</span>
+                <span class="total-label">סה"כ לתשלום:</span>
             </div>
         </div>
 
         <div class="payment-method-new">
-            <p><strong>שולם במזומן/העברה</strong></p>
-        </div>
-
-        <div class="footer-new">
-            <p class="tax-exempt-new">⚠️ עוסק פטור</p>
+            <p>שולם במזומן/העברה</p>
         </div>
     `;
 
@@ -265,8 +263,8 @@ function generateReceipt() {
 
 // Download receipt as PDF
 function downloadPDF() {
-    // Get the receipt element
-    const receiptElement = document.querySelector('#receipt-content .receipt');
+    // Get the receipt element - updated selector
+    const receiptElement = document.querySelector('.receipt');
 
     if (!receiptElement) {
         showNotification('⚠️ לא נמצאה קבלה להורדה', 'error');

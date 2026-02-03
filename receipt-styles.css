@@ -529,96 +529,118 @@ body {
     align-items: flex-start;
     padding: 20px;
     border: 2px solid #000;
-    margin-bottom: 20px;
-}
-
-.header-right {
-    flex: 0 0 120px;
-}
-
-.receipt-logo-new {
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-    border: 2px solid #000;
-    padding: 5px;
-    background: white;
-}
-
-.logo-placeholder {
-    width: 100px;
-    height: 100px;
-    border: 2px solid #000;
-    background: #f0f0f0;
+    margin-bottom: 0;
 }
 
 .header-left {
     flex: 1;
-    text-align: left;
-    padding-left: 20px;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.header-right {
+    flex: 0 0 140px;
+}
+
+.receipt-logo-new {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #f5f5f5;
+}
+
+.logo-placeholder {
+    width: 120px;
+    height: 120px;
+    border: 1px solid #ccc;
+    background: #f0f0f0;
 }
 
 .business-name-new {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 700;
-    margin: 0 0 10px 0;
+    margin: 0 0 15px 0;
     color: #000;
+    text-align: right;
 }
 
 .business-details-new {
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 12px;
+    line-height: 1.8;
+    text-align: right;
 }
 
 .business-details-new p {
-    margin: 3px 0;
+    margin: 2px 0;
 }
 
 /* Date section */
 .receipt-date-section {
-    background: #d3d3d3;
-    padding: 15px;
+    background: #c0c0c0;
+    padding: 20px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 .date-box {
     font-size: 16px;
 }
 
+.date-large {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
 .receipt-number-label {
-    font-size: 14px;
-    margin-top: 5px;
+    font-size: 13px;
 }
 
 /* Customer section */
 .customer-section {
-    margin-bottom: 20px;
+    padding: 20px;
+    text-align: right;
 }
 
-.customer-section h3 {
-    font-size: 16px;
+.customer-label {
+    font-size: 14px;
+    font-weight: 600;
     margin-bottom: 10px;
+    text-align: right;
+}
+
+.customer-info-new {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.customer-number {
+    font-size: 16px;
     font-weight: 600;
 }
 
-.customer-info-new p {
-    margin: 5px 0;
-    font-size: 14px;
+.customer-details {
+    text-align: right;
+}
+
+.customer-details p {
+    margin: 3px 0;
+    font-size: 13px;
 }
 
 /* Service description */
 .service-description-new {
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #f9f9f9;
-    border-right: 3px solid #000;
+    padding: 15px 20px;
+    text-align: right;
 }
 
-.service-description-new p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.6;
+.service-number {
+    font-size: 16px;
+    font-weight: 600;
 }
 
 /* Table */
@@ -647,8 +669,8 @@ body {
 
 /* Total section */
 .total-section-new {
-    background: #f0f0f0;
-    padding: 15px;
+    background: #e8e8e8;
+    padding: 20px;
     margin-bottom: 15px;
 }
 
@@ -656,32 +678,24 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
 }
 
+.total-label {
+    text-align: right;
+}
+
 .total-amount {
-    font-size: 22px;
+    font-size: 20px;
+    text-align: left;
 }
 
 /* Payment method */
 .payment-method-new {
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 14px;
-}
-
-/* Footer */
-.footer-new {
-    text-align: center;
-    padding-top: 20px;
-    border-top: 1px solid #ccc;
-}
-
-.tax-exempt-new {
-    font-size: 14px;
-    color: #666;
-    font-weight: 600;
+    padding: 15px;
+    font-size: 13px;
 }
 
 /* ========================================
